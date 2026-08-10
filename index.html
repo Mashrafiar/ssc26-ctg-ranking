@@ -4,178 +4,411 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>SSC 2026 Chattogram Board Ranking</title>
+<title>SSC 2026 Chattogram Board — Science Ranking</title>
 
 <style>
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --dark: #0f172a;
+    --text: #1e293b;
+    --muted: #64748b;
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --border: #e2e8f0;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: #f1f5f9;
-    color: #172033;
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background: var(--bg);
+    color: var(--text);
 }
 
-header {
-    background: linear-gradient(135deg, #0f172a, #1d4ed8);
+/* ================= HEADER ================= */
+
+.hero {
+    background:
+        radial-gradient(circle at 15% 20%, rgba(96,165,250,.25), transparent 30%),
+        radial-gradient(circle at 85% 10%, rgba(139,92,246,.25), transparent 30%),
+        linear-gradient(135deg, #0f172a, #172554 55%, #1e40af);
+
     color: white;
-    padding: 35px 15px;
-    text-align: center;
+    padding: 55px 20px 85px;
 }
 
-header h1 {
-    font-size: 28px;
-    margin-bottom: 8px;
+.hero-content {
+    max-width: 1100px;
+    margin: auto;
 }
 
-header p {
-    opacity: .9;
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
 }
+
+.logo {
+    width: 45px;
+    height: 45px;
+    border-radius: 13px;
+    background: rgba(255,255,255,.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    border: 1px solid rgba(255,255,255,.18);
+}
+
+.brand span {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: .3px;
+}
+
+.hero h1 {
+    font-size: clamp(30px, 5vw, 52px);
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 14px;
+}
+
+.hero p {
+    color: #cbd5e1;
+    font-size: 17px;
+    max-width: 650px;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.2);
+    padding: 8px 14px;
+    border-radius: 999px;
+    margin-top: 22px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ================= MAIN ================= */
 
 .container {
     max-width: 1100px;
-    margin: 25px auto;
-    padding: 0 15px;
+    margin: -45px auto 0;
+    padding: 0 18px 50px;
+    position: relative;
 }
+
+/* ================= STATS ================= */
 
 .stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 16px;
 }
 
 .stat {
-    background: white;
-    padding: 20px;
-    border-radius: 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 12px 35px rgba(15,23,42,.08);
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--dark);
+}
+
+/* ================= TOP 3 ================= */
+
+.section-title {
+    margin: 38px 0 18px;
+}
+
+.section-title h2 {
+    font-size: 23px;
+    color: var(--dark);
+}
+
+.section-title p {
+    color: var(--muted);
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.top-three {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 17px;
+}
+
+.top-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 25px 20px;
     text-align: center;
-    box-shadow: 0 3px 12px rgba(0,0,0,.07);
+    box-shadow: 0 10px 30px rgba(15,23,42,.07);
+    transition: transform .2s ease;
 }
 
-.stat h2 {
-    color: #1d4ed8;
-    margin-bottom: 5px;
+.top-card:hover {
+    transform: translateY(-4px);
 }
 
-.search-box {
+.top-rank {
+    font-size: 30px;
+    margin-bottom: 10px;
+}
+
+.top-name {
+    font-size: 17px;
+    font-weight: 750;
+    color: var(--dark);
+    margin-bottom: 7px;
+}
+
+.top-roll {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 17px;
+}
+
+.top-info {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+.top-info strong {
+    display: block;
+    font-size: 18px;
+    color: var(--primary);
+}
+
+.top-info span {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+/* ================= SEARCH ================= */
+
+.search-section {
+    margin-top: 35px;
     background: white;
+    border: 1px solid var(--border);
+    border-radius: 18px;
     padding: 18px;
-    border-radius: 14px;
-    margin-bottom: 20px;
-    box-shadow: 0 3px 12px rgba(0,0,0,.07);
+    box-shadow: 0 8px 25px rgba(15,23,42,.05);
 }
 
-.search-box input {
+.search-wrapper {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #94a3b8;
+}
+
+#search {
     width: 100%;
-    padding: 13px 15px;
-    border: 1px solid #cbd5e1;
-    border-radius: 9px;
-    font-size: 16px;
+    padding: 15px 18px 15px 45px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 15px;
     outline: none;
+    transition: .2s;
 }
 
-.search-box input:focus {
-    border-color: #2563eb;
+#search:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.1);
 }
 
-.table-wrapper {
+/* ================= TABLE ================= */
+
+.table-card {
+    margin-top: 18px;
     background: white;
-    border-radius: 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(15,23,42,.06);
+}
+
+.table-scroll {
     overflow-x: auto;
-    box-shadow: 0 3px 12px rgba(0,0,0,.07);
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
-    min-width: 700px;
+    min-width: 720px;
 }
 
-th {
-    background: #1e293b;
-    color: white;
-    padding: 14px 10px;
-    text-align: center;
-}
-
-td {
-    padding: 13px 10px;
-    text-align: center;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-tr:hover {
+thead {
     background: #f8fafc;
 }
 
-.rank {
-    font-weight: bold;
-}
-
-.top1 {
-    color: #d97706;
-    font-size: 19px;
-}
-
-.top2 {
+th {
+    padding: 15px 14px;
+    text-align: left;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
     color: #64748b;
-    font-size: 18px;
+    border-bottom: 1px solid var(--border);
 }
 
-.top3 {
-    color: #92400e;
-    font-size: 18px;
+td {
+    padding: 16px 14px;
+    border-bottom: 1px solid #eef2f7;
+    font-size: 14px;
+}
+
+tbody tr {
+    transition: background .15s;
+}
+
+tbody tr:hover {
+    background: #f8fafc;
+}
+
+.rank-cell {
+    font-weight: 800;
+    width: 70px;
+}
+
+.rank-number {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: #eff6ff;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .student-name {
-    color: #2563eb;
-    font-weight: 600;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.roll {
+    color: var(--muted);
+    font-family: monospace;
+    font-size: 13px;
+}
+
+.gpa {
+    font-weight: 800;
+    color: #059669;
+}
+
+.marks {
+    font-weight: 750;
 }
 
 .result-btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     text-decoration: none;
-    background: #2563eb;
+    background: var(--primary);
     color: white;
-    padding: 7px 12px;
-    border-radius: 7px;
-    font-size: 13px;
+    padding: 8px 13px;
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 700;
+    transition: .2s;
 }
 
 .result-btn:hover {
-    background: #1d4ed8;
+    background: var(--primary-dark);
+    transform: translateY(-1px);
 }
 
+/* ================= EMPTY ================= */
+
 .no-result {
-    padding: 30px;
     text-align: center;
-    color: #64748b;
+    padding: 45px 20px;
+    color: var(--muted);
 }
+
+/* ================= FOOTER ================= */
 
 footer {
     text-align: center;
-    padding: 30px 15px;
-    color: #64748b;
-    font-size: 13px;
+    color: #94a3b8;
+    font-size: 12px;
+    padding: 25px;
 }
 
-@media (max-width: 650px) {
+/* ================= MOBILE ================= */
 
-    header h1 {
-        font-size: 22px;
+@media (max-width: 700px) {
+
+    .hero {
+        padding: 38px 18px 70px;
+    }
+
+    .hero h1 {
+        font-size: 31px;
+    }
+
+    .hero p {
+        font-size: 14px;
+    }
+
+    .container {
+        margin-top: -35px;
     }
 
     .stats {
         grid-template-columns: 1fr;
     }
 
-    th, td {
-        padding: 11px 7px;
-        font-size: 13px;
+    .top-three {
+        grid-template-columns: 1fr;
+    }
+
+    .top-card {
+        padding: 20px;
+    }
+
+    .section-title h2 {
+        font-size: 20px;
     }
 }
 </style>
@@ -183,75 +416,129 @@ footer {
 
 <body>
 
-<header>
-    <h1>🏆 SSC 2026 Chattogram Board</h1>
-    <p>Science Group Ranking</p>
+<!-- ================= HERO ================= -->
+
+<header class="hero">
+
+    <div class="hero-content">
+
+        <div class="brand">
+            <div class="logo">🏆</div>
+            <span>SSC RESULT RANKING</span>
+        </div>
+
+        <h1>SSC 2026<br>Chattogram Board</h1>
+
+        <p>
+            Science Group Ranking based on GPA and Total Marks
+        </p>
+
+        <div class="badge">
+            🔬 Science Group
+        </div>
+
+    </div>
+
 </header>
 
-<div class="container">
 
-    <div class="stats">
+<main class="container">
+
+    <!-- ================= STATS ================= -->
+
+    <section class="stats">
 
         <div class="stat">
-            <h2 id="studentCount">0</h2>
-            <p>Students</p>
+            <div class="stat-label">TOTAL STUDENTS</div>
+            <div class="stat-value" id="studentCount">0</div>
         </div>
 
         <div class="stat">
-            <h2 id="highestGPA">0.00</h2>
-            <p>Highest GPA</p>
+            <div class="stat-label">HIGHEST GPA</div>
+            <div class="stat-value" id="highestGPA">0.00</div>
         </div>
 
         <div class="stat">
-            <h2 id="highestMarks">0</h2>
-            <p>Highest Total Marks</p>
+            <div class="stat-label">HIGHEST TOTAL MARKS</div>
+            <div class="stat-value" id="highestMarks">0</div>
+        </div>
+
+    </section>
+
+
+    <!-- ================= TOP THREE ================= -->
+
+    <div class="section-title">
+        <h2>🏆 Top Performers</h2>
+        <p>Leading students in the Science Group</p>
+    </div>
+
+    <section class="top-three" id="topThree"></section>
+
+
+    <!-- ================= SEARCH ================= -->
+
+    <div class="search-section">
+
+        <div class="search-wrapper">
+
+            <span class="search-icon">🔎</span>
+
+            <input
+                type="text"
+                id="search"
+                placeholder="Search by student name or SSC roll..."
+                oninput="renderTable()"
+            >
+
         </div>
 
     </div>
 
-    <div class="search-box">
-        <input
-            type="text"
-            id="search"
-            placeholder="Search by Roll or Name..."
-            oninput="renderTable()"
-        >
-    </div>
 
-    <div class="table-wrapper">
+    <!-- ================= TABLE ================= -->
 
-        <table>
+    <section class="table-card">
 
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Roll</th>
-                    <th>Name</th>
-                    <th>GPA</th>
-                    <th>Total Marks</th>
-                    <th>Result</th>
-                </tr>
-            </thead>
+        <div class="table-scroll">
 
-            <tbody id="rankingTable"></tbody>
+            <table>
 
-        </table>
+                <thead>
 
-    </div>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Roll</th>
+                        <th>Student</th>
+                        <th>GPA</th>
+                        <th>Total Marks</th>
+                        <th>Official Result</th>
+                    </tr>
 
-</div>
+                </thead>
+
+                <tbody id="rankingTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
 
 <footer>
-    SSC 2026 Chattogram Board — Science Ranking
+    SSC 2026 Chattogram Board • Science Ranking
 </footer>
 
 
 <script>
 
-/*
-    Replace this sample data later with your
-    approved/authorized dataset.
-*/
+/* =========================================
+   SAMPLE DATA
+   Replace with authorized dataset later
+========================================= */
 
 const students = [
 
@@ -286,13 +573,12 @@ const students = [
 ];
 
 
-/*
-    Ranking rule:
-
-    1. GPA descending
-    2. Total Marks descending
-    3. Name alphabetical
-*/
+/* =========================================
+   RANKING
+   GPA ↓
+   Total Marks ↓
+   Name A-Z
+========================================= */
 
 students.sort((a, b) => {
 
@@ -313,18 +599,82 @@ students.sort((a, b) => {
 });
 
 
-function getResultURL(roll) {
+/* =========================================
+   BOARD RESULT LINK
+========================================= */
 
-    return "https://sresult.bise-ctg.gov.bd/to_ssc_26_ctg/individual/index.php?roll=" 
-           + encodeURIComponent(roll);
+function getResultURL() {
+
+    return "https://sresult.bise-ctg.gov.bd/to_ssc_26_ctg/individual/index.php";
 
 }
 
 
+/* =========================================
+   TOP THREE
+========================================= */
+
+function renderTopThree() {
+
+    const container =
+        document.getElementById("topThree");
+
+    container.innerHTML = "";
+
+    students.slice(0, 3).forEach((student, index) => {
+
+        const medals = ["🥇", "🥈", "🥉"];
+
+        const card = document.createElement("div");
+
+        card.className = "top-card";
+
+        card.innerHTML = `
+
+            <div class="top-rank">
+                ${medals[index]}
+            </div>
+
+            <div class="top-name">
+                ${student.name}
+            </div>
+
+            <div class="top-roll">
+                Roll: ${student.roll}
+            </div>
+
+            <div class="top-info">
+
+                <div>
+                    <strong>${student.gpa.toFixed(2)}</strong>
+                    <span>GPA</span>
+                </div>
+
+                <div>
+                    <strong>${student.total_marks}</strong>
+                    <span>MARKS</span>
+                </div>
+
+            </div>
+
+        `;
+
+        container.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================
+   TABLE
+========================================= */
+
 function renderTable() {
 
     const search =
-        document.getElementById("search")
+        document
+        .getElementById("search")
         .value
         .toLowerCase()
         .trim();
@@ -334,56 +684,58 @@ function renderTable() {
 
     table.innerHTML = "";
 
-    let visibleStudents = students.filter(student => {
 
-        return student.roll.toLowerCase().includes(search)
-            || student.name.toLowerCase().includes(search);
+    const filtered =
+        students.filter(student => {
 
-    });
+            return student.roll
+                .toLowerCase()
+                .includes(search)
+                ||
+                student.name
+                .toLowerCase()
+                .includes(search);
+
+        });
 
 
-    if (visibleStudents.length === 0) {
+    if (filtered.length === 0) {
 
         table.innerHTML = `
+
             <tr>
                 <td colspan="6" class="no-result">
-                    No student found
+                    🔎 No student found
                 </td>
             </tr>
+
         `;
 
         return;
     }
 
 
-    visibleStudents.forEach(student => {
-
-        /*
-            Rank is based on the complete sorted list,
-            not the filtered search result.
-        */
+    filtered.forEach(student => {
 
         const rank =
             students.indexOf(student) + 1;
 
 
-        let rankClass = "rank";
-
-        if (rank === 1) rankClass += " top1";
-        if (rank === 2) rankClass += " top2";
-        if (rank === 3) rankClass += " top3";
-
-
-        const row = document.createElement("tr");
+        const row =
+            document.createElement("tr");
 
 
         row.innerHTML = `
 
-            <td class="${rankClass}">
-                ${rank}
+            <td class="rank-cell">
+
+                <div class="rank-number">
+                    ${rank}
+                </div>
+
             </td>
 
-            <td>
+            <td class="roll">
                 ${student.roll}
             </td>
 
@@ -391,27 +743,28 @@ function renderTable() {
                 ${student.name}
             </td>
 
-            <td>
+            <td class="gpa">
                 ${student.gpa.toFixed(2)}
             </td>
 
-            <td>
+            <td class="marks">
                 ${student.total_marks}
             </td>
 
             <td>
+
                 <a
                     class="result-btn"
-                    href="${getResultURL(student.roll)}"
+                    href="${getResultURL()}"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
-                    View Result
+                    View Result ↗
                 </a>
+
             </td>
 
         `;
-
 
         table.appendChild(row);
 
@@ -420,36 +773,50 @@ function renderTable() {
 }
 
 
+/* =========================================
+   STATISTICS
+========================================= */
+
 function updateStats() {
 
-    document.getElementById("studentCount").textContent =
-        students.length;
+    document.getElementById("studentCount")
+        .textContent = students.length;
 
 
-    if (students.length > 0) {
-
-        const highestGPA =
-            Math.max(...students.map(s => s.gpa));
-
-        const highestMarks =
-            Math.max(...students.map(s => s.total_marks));
+    if (!students.length) return;
 
 
-        document.getElementById("highestGPA").textContent =
-            highestGPA.toFixed(2);
+    const highestGPA =
+        Math.max(
+            ...students.map(student => student.gpa)
+        );
 
-        document.getElementById("highestMarks").textContent =
-            highestMarks;
 
-    }
+    const highestMarks =
+        Math.max(
+            ...students.map(student => student.total_marks)
+        );
+
+
+    document.getElementById("highestGPA")
+        .textContent = highestGPA.toFixed(2);
+
+
+    document.getElementById("highestMarks")
+        .textContent = highestMarks;
 
 }
 
 
+/* =========================================
+   START
+========================================= */
+
 updateStats();
+renderTopThree();
 renderTable();
 
 </script>
 
 </body>
-  </html>
+    </html>
