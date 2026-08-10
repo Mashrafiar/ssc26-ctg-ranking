@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SSC 2026 Chattogram Board Ranking</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #172033;
+}
+
+header {
+    background: linear-gradient(135deg, #0f172a, #1d4ed8);
+    color: white;
+    padding: 35px 15px;
+    text-align: center;
+}
+
+header h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+header p {
+    opacity: .9;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 25px auto;
+    padding: 0 15px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat {
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,.07);
+}
+
+.stat h2 {
+    color: #1d4ed8;
+    margin-bottom: 5px;
+}
+
+.search-box {
+    background: white;
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.07);
+}
+
+.search-box input {
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    font-size: 16px;
+    outline: none;
+}
+
+.search-box input:focus {
+    border-color: #2563eb;
+}
+
+.table-wrapper {
+    background: white;
+    border-radius: 14px;
+    overflow-x: auto;
+    box-shadow: 0 3px 12px rgba(0,0,0,.07);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
+
+th {
+    background: #1e293b;
+    color: white;
+    padding: 14px 10px;
+    text-align: center;
+}
+
+td {
+    padding: 13px 10px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+tr:hover {
+    background: #f8fafc;
+}
+
+.rank {
+    font-weight: bold;
+}
+
+.top1 {
+    color: #d97706;
+    font-size: 19px;
+}
+
+.top2 {
+    color: #64748b;
+    font-size: 18px;
+}
+
+.top3 {
+    color: #92400e;
+    font-size: 18px;
+}
+
+.student-name {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.result-btn {
+    display: inline-block;
+    text-decoration: none;
+    background: #2563eb;
+    color: white;
+    padding: 7px 12px;
+    border-radius: 7px;
+    font-size: 13px;
+}
+
+.result-btn:hover {
+    background: #1d4ed8;
+}
+
+.no-result {
+    padding: 30px;
+    text-align: center;
+    color: #64748b;
+}
+
+footer {
+    text-align: center;
+    padding: 30px 15px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+@media (max-width: 650px) {
+
+    header h1 {
+        font-size: 22px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    th, td {
+        padding: 11px 7px;
+        font-size: 13px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🏆 SSC 2026 Chattogram Board</h1>
+    <p>Science Group Ranking</p>
+</header>
+
+<div class="container">
+
+    <div class="stats">
+
+        <div class="stat">
+            <h2 id="studentCount">0</h2>
+            <p>Students</p>
+        </div>
+
+        <div class="stat">
+            <h2 id="highestGPA">0.00</h2>
+            <p>Highest GPA</p>
+        </div>
+
+        <div class="stat">
+            <h2 id="highestMarks">0</h2>
+            <p>Highest Total Marks</p>
+        </div>
+
+    </div>
+
+    <div class="search-box">
+        <input
+            type="text"
+            id="search"
+            placeholder="Search by Roll or Name..."
+            oninput="renderTable()"
+        >
+    </div>
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Roll</th>
+                    <th>Name</th>
+                    <th>GPA</th>
+                    <th>Total Marks</th>
+                    <th>Result</th>
+                </tr>
+            </thead>
+
+            <tbody id="rankingTable"></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<footer>
+    SSC 2026 Chattogram Board — Science Ranking
+</footer>
+
+
+<script>
+
+/*
+    Replace this sample data later with your
+    approved/authorized dataset.
+*/
+
+const students = [
+
+    {
+        roll: "100001",
+        name: "Example Student One",
+        gpa: 5.00,
+        total_marks: 1185
+    },
+
+    {
+        roll: "100002",
+        name: "Example Student Two",
+        gpa: 5.00,
+        total_marks: 1178
+    },
+
+    {
+        roll: "100003",
+        name: "Example Student Three",
+        gpa: 5.00,
+        total_marks: 1178
+    },
+
+    {
+        roll: "100004",
+        name: "Example Student Four",
+        gpa: 4.89,
+        total_marks: 1165
+    }
+
+];
+
+
+/*
+    Ranking rule:
+
+    1. GPA descending
+    2. Total Marks descending
+    3. Name alphabetical
+*/
+
+students.sort((a, b) => {
+
+    if (b.gpa !== a.gpa) {
+        return b.gpa - a.gpa;
+    }
+
+    if (b.total_marks !== a.total_marks) {
+        return b.total_marks - a.total_marks;
+    }
+
+    return a.name.localeCompare(
+        b.name,
+        undefined,
+        { sensitivity: "base" }
+    );
+
+});
+
+
+function getResultURL(roll) {
+
+    return "https://sresult.bise-ctg.gov.bd/to_ssc_26_ctg/individual/index.php?roll=" 
+           + encodeURIComponent(roll);
+
+}
+
+
+function renderTable() {
+
+    const search =
+        document.getElementById("search")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const table =
+        document.getElementById("rankingTable");
+
+    table.innerHTML = "";
+
+    let visibleStudents = students.filter(student => {
+
+        return student.roll.toLowerCase().includes(search)
+            || student.name.toLowerCase().includes(search);
+
+    });
+
+
+    if (visibleStudents.length === 0) {
+
+        table.innerHTML = `
+            <tr>
+                <td colspan="6" class="no-result">
+                    No student found
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+
+    visibleStudents.forEach(student => {
+
+        /*
+            Rank is based on the complete sorted list,
+            not the filtered search result.
+        */
+
+        const rank =
+            students.indexOf(student) + 1;
+
+
+        let rankClass = "rank";
+
+        if (rank === 1) rankClass += " top1";
+        if (rank === 2) rankClass += " top2";
+        if (rank === 3) rankClass += " top3";
+
+
+        const row = document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td class="${rankClass}">
+                ${rank}
+            </td>
+
+            <td>
+                ${student.roll}
+            </td>
+
+            <td class="student-name">
+                ${student.name}
+            </td>
+
+            <td>
+                ${student.gpa.toFixed(2)}
+            </td>
+
+            <td>
+                ${student.total_marks}
+            </td>
+
+            <td>
+                <a
+                    class="result-btn"
+                    href="${getResultURL(student.roll)}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    View Result
+                </a>
+            </td>
+
+        `;
+
+
+        table.appendChild(row);
+
+    });
+
+}
+
+
+function updateStats() {
+
+    document.getElementById("studentCount").textContent =
+        students.length;
+
+
+    if (students.length > 0) {
+
+        const highestGPA =
+            Math.max(...students.map(s => s.gpa));
+
+        const highestMarks =
+            Math.max(...students.map(s => s.total_marks));
+
+
+        document.getElementById("highestGPA").textContent =
+            highestGPA.toFixed(2);
+
+        document.getElementById("highestMarks").textContent =
+            highestMarks;
+
+    }
+
+}
+
+
+updateStats();
+renderTable();
+
+</script>
+
+</body>
+  </html>
