@@ -1,0 +1,102 @@
+import json
+import pandas as pd
+
+# Excel ফাইল লোড করা
+excel_path = "Result1.xlsx"
+df = pd.read_excel(excel_path)
+
+subject_cols = [
+    "101 - BANGLA-I",
+    "107 - ENGLISH-I",
+    "109 - MATHEMATICS",
+    "111 - ISLAM AND MORAL EDUCATION",
+    "112 - HINDU RELIGION AND MORAL EDUCATION",
+    "113 - BUDDHIST RELIGION AND MORAL EDUCATION",
+    "114 - CHRISTIAN RELIGION AND MORAL EDUCATION",
+    "126 - HIGHER MATHEMATICS",
+    "136 - PHYSICS",
+    "137 - CHEMISTRY",
+    "138 - BIOLOGY",
+    "147 - PHYSICAL EDUCATION, HEALTH AND SPORTS",
+    "150 - BANGLADESH AND GLOBAL STUDIES",
+    "154 - Information And Communication Technology",
+    "156 - Career Education",
+]
+
+rel_cols = [
+    "111 - ISLAM AND MORAL EDUCATION",
+    "112 - HINDU RELIGION AND MORAL EDUCATION",
+    "113 - BUDDHIST RELIGION AND MORAL EDUCATION",
+    "114 - CHRISTIAN RELIGION AND MORAL EDUCATION",
+]
+
+records = []
+
+for idx, row in df.iterrows():
+    rec = {
+        "r": int(row["Rank"]) if pd.notna(row["Rank"]) else idx + 1,
+        "roll": int(row["Roll"]),
+        "name": str(row["Name"]).strip(),
+        "inst": (
+            str(row["Institute"]).strip() if pd.notna(row["Institute"]) else ""
+        ),
+        "gpa": str(row["GPA"]) if pd.notna(row["GPA"]) else "FAIL",
+        "tm": (
+            int(row["Total Marks"])
+            if pd.notna(row["Total Marks"])
+            else "N/A"
+        ),
+        "fn": (
+            str(row["Father's Name"]).strip()
+            if pd.notna(row["Father's Name"])
+            else "N/A"
+        ),
+        "mn": (
+            str(row["Mother's Name"]).strip()
+            if pd.notna(row["Mother's Name"])
+            else "N/A"
+        ),
+        "bd": str(row["Board"]).strip() if pd.notna(row["Board"]) else "N/A",
+        "grp": str(row["Group"]).strip() if pd.notna(row["Group"]) else "N/A",
+        "reg": (
+            str(row["Reg. NO"]).strip() if pd.notna(row["Reg. NO"]) else "N/A"
+        ),
+        "ses": (
+            str(row["Session"]).strip() if pd.notna(row["Session"]) else "N/A"
+        ),
+        "typ": str(row["Type"]).strip() if pd.notna(row["Type"]) else "N/A",
+        "dob": (
+            str(row["Date of Birth"]).split()[0]
+            if pd.notna(row["Date of Birth"])
+            else "N/A"
+        ),
+        "res": str(row["Result"]).strip() if pd.notna(row["Result"]) else "N/A",
+        "subs": {},
+    }
+
+    # চেক করা শিক্ষার্থী কোনো ধর্মে নম্বর পেয়েছে কিনা
+    has_any_rel = any(pd.notna(row[rc]) for rc in rel_cols)
+
+    for col in subject_cols:
+        val = row[col]
+        # অতিরিক্ত ধর্মের N/A কলামগুলো ফিল্টার করে বাদ দেওয়া
+        if col in rel_cols and has_any_rel and pd.isna(val):
+            continue
+
+        if pd.notna(val):
+            val_str = (
+                str(int(val))
+                if isinstance(val, (int, float)) and val == int(val)
+                else str(val)
+            )
+            rec["subs"][col] = val_str
+        else:
+            rec["subs"][col] = "N/A"
+
+    records.append(rec)
+
+# JSON সেভ করা
+with open("data.json", "w", encoding="utf-8") as f:
+    json.dump(records, f, ensure_ascii=False, indent=2)
+
+print("data.json সফলভাবে তৈরি হয়েছে!")
