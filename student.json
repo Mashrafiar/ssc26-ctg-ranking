@@ -1,0 +1,26 @@
+[
+{
+    "roll": "100001",
+    "name": "Example Student One",
+    "gpa": 5.0,
+    "total_marks": 1185
+  },
+  {
+    "roll": "100002",
+    "name": "Example Student Two",
+    "gpa": 5.0,
+    "total_marks": 1178
+  },
+  {
+    "roll": "100003",
+    "name": "Example Student Three",
+    "gpa": 5.0,
+    "total_marks": 1178
+  },
+  {
+    "roll": "100004",
+    "name": "Example Student Four",
+    "gpa": 4.89,
+    "total_marks": 1165
+  }
+]
