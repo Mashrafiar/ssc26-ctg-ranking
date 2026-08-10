@@ -1,40 +1,99 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSC 2026 Chattogram Board Ranking</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .clickable-name {
+            color: #2563eb;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .clickable-name:hover {
+            color: #1d4ed8;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans min-h-screen">
 
-<title>SSC 2026 Chattogram Board — Science Ranking</title>
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-800 mb-2">SSC 2026 Ranking (Science Group)</h1>
+            <p class="text-gray-600">Board of Intermediate and Secondary Education, Chattogram</p>
+        </header>
 
-<style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        <!-- Search & Info Bar -->
+        <div class="bg-white p-4 rounded-lg shadow mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <input type="text" id="searchInput" placeholder="রোল, নাম বা স্কুলের নামে খুঁজুন..." 
+                   class="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div id="totalStats" class="text-gray-600 text-sm font-semibold">
+                মোট শিক্ষার্থী: লোড হচ্ছে...
+            </div>
+        </div>
 
-:root {
-    --primary: #2563eb;
-    --primary-dark: #1d4ed8;
-    --dark: #0f172a;
-    --text: #1e293b;
-    --muted: #64748b;
-    --bg: #f5f7fb;
-    --card: #ffffff;
-    --border: #e2e8f0;
-}
+        <!-- Main Ranking Table -->
+        <div class="bg-white rounded-lg shadow overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-blue-700 text-white text-sm uppercase">
+                        <th class="py-3 px-4 font-semibold">Rank</th>
+                        <th class="py-3 px-4 font-semibold">Roll</th>
+                        <th class="py-3 px-4 font-semibold">Name</th>
+                        <th class="py-3 px-4 font-semibold">Institute</th>
+                        <th class="py-3 px-4 font-semibold text-center">GPA</th>
+                        <th class="py-3 px-4 font-semibold text-center">Total Marks</th>
+                    </tr>
+                </thead>
+                <tbody id="rankingTableBody" class="divide-y divide-gray-200 text-sm">
+                    <!-- Data will be populated via script.js -->
+                </tbody>
+            </table>
+        </div>
 
-body {
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Arial,
-        sans-serif;
+        <!-- Pagination Controls -->
+        <div class="flex justify-between items-center mt-6">
+            <button id="prevBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-300">Previous</button>
+            <span id="pageInfo" class="text-sm text-gray-700"></span>
+            <button id="nextBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-300">Next</button>
+        </div>
+    </div>
 
-    background: var(--bg);
-    color: var(--text);
+    <!-- Student Detail Modal (Page 2 View) -->
+    <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 relative">
+            <button id="closeModal" class="absolute top-4 right-4 text-gray-500 hover:text-red-600 text-2xl font-bold">&times;</button>
+            
+            <h2 id="modalName" class="text-2xl font-bold text-blue-800 border-b pb-2 mb-4"></h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 text-sm">
+                <div><span class="font-semibold text-gray-600">Rank:</span> <span id="modalRank" class="font-bold text-blue-600"></span></div>
+                <div><span class="font-semibold text-gray-600">Roll:</span> <span id="modalRoll"></span></div>
+                <div><span class="font-semibold text-gray-600">Father's Name:</span> <span id="modalFather"></span></div>
+                <div><span class="font-semibold text-gray-600">Mother's Name:</span> <span id="modalMother"></span></div>
+                <div><span class="font-semibold text-gray-600">Registration No:</span> <span id="modalReg"></span></div>
+                <div><span class="font-semibold text-gray-600">Session:</span> <span id="modalSession"></span></div>
+                <div><span class="font-semibold text-gray-600">Board:</span> <span id="modalBoard"></span></div>
+                <div><span class="font-semibold text-gray-600">Group:</span> <span id="modalGroup"></span></div>
+                <div><span class="font-semibold text-gray-600">Type:</span> <span id="modalType"></span></div>
+                <div><span class="font-semibold text-gray-600">Date of Birth:</span> <span id="modalDOB"></span></div>
+                <div class="md:col-span-2"><span class="font-semibold text-gray-600">Institute:</span> <span id="modalInst"></span></div>
+                <div><span class="font-semibold text-gray-600">GPA:</span> <span id="modalGPA" class="font-bold text-green-600"></span></div>
+                <div><span class="font-semibold text-gray-600">Total Marks:</span> <span id="modalMarks" class="font-bold text-purple-600"></span></div>
+            </div>
+
+            <h3 class="text-lg font-semibold text-gray-800 border-b pb-2 mb-3">Subject Wise Marks</h3>
+            <div id="modalSubjects" class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm bg-gray-50 p-4 rounded-lg">
+                <!-- Subject details will load here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>    color: var(--text);
 }
 
 /* ================= HEADER ================= */
