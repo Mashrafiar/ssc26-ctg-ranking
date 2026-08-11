@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSC 2026 Board Result - Chattogram</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 20px; background-color: #f8fafc; }
+    .header { text-align: center; margin-bottom: 20px; }
+    .search-box { width: 100%; max-width: 600px; margin: 0 auto 20px; display: block; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 16px; }
+    .table-container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { background-color: #2563eb; color: white; padding: 12px; }
+    td { padding: 12px; border-bottom: 1px solid #e2e8f0; }
+    tr:hover { background-color: #f1f5f9; }
+    a { color: #2563eb; text-decoration: none; font-weight: bold; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h2>Board of Intermediate and Secondary Education, Chattogram</h2>
+    <h3>Science Group Ranking</h3>
+  </div>
+
+  <input type="text" id="searchBox" class="search-box" placeholder="রোল, নাম বা প্রতিষ্ঠানের নাম দিয়ে খুঁজুন...">
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>RANK</th>
+          <th>ROLL</th>
+          <th>NAME</th>
+          <th>INSTITUTE</th>
+          <th>GPA</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    let allData = [];
+
+    fetch('data.json')
+      .then(res => res.json())
+      .then(data => {
+        allData = data;
+        renderTable(allData);
+      });
+
+    function renderTable(data) {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = '';
+      data.forEach(s => {
+        const row = `<tr>
+          <td>${s.rk}</td>
+          <td>${s.rl}</td>
+          <td><a href="details.html?roll=${s.rl}">${s.nm}</a></td>
+          <td>${s.inst}</td>
+          <td>${s.gp}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+      });
+    }
+
+    document.getElementById('searchBox').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      const filtered = allData.filter(s => 
+        s.nm.toLowerCase().includes(q) || 
+        s.rl.includes(q) || 
+        s.inst.toLowerCase().includes(q)
+      );
+      renderTable(filtered);
+    });
+  </script>
+</body>
+</html>
