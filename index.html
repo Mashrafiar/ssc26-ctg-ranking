@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSC 2026 Board Result - Chattogram</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f8fafc;
+      color: #0f172a;
+    }
+    .header { text-align: center; margin-bottom: 18px; }
+    .header h2 { margin: 5px 0; }
+    .header h3 { margin: 5px 0 18px; color: #334155; }
+
+    .search-box {
+      width: 100%;
+      max-width: 700px;
+      margin: 0 auto 12px;
+      display: block;
+      padding: 13px 15px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 16px;
+      outline: none;
+    }
+    .search-box:focus { border-color: #2563eb; }
+
+    .status {
+      max-width: 1000px;
+      margin: 0 auto 12px;
+      color: #475569;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .table-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      min-width: 720px;
+    }
+    th {
+      background: #2563eb;
+      color: white;
+      padding: 12px;
+      white-space: nowrap;
+    }
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    tbody tr:hover { background: #f1f5f9; }
+    a { color: #2563eb; text-decoration: none; font-weight: bold; }
+    a:hover { text-decoration: underline; }
+
+    .pagination {
+      max-width: 1100px;
+      margin: 16px auto 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .page-btn {
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: #0f172a;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .page-btn:hover { background: #f1f5f9; }
+    .page-btn.active {
+      background: #2563eb;
+      color: white;
+      border-color: #2563eb;
+      font-weight: bold;
+    }
+    .page-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    .loading, .error {
+      max-width: 900px;
+      margin: 30px auto;
+      text-align: center;
+      padding: 20px;
+      border-radius: 8px;
+      background: white;
+    }
+    .error { color: #b91c1c; }
+
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      .header h2 { font-size: 20px; }
+      .header h3 { font-size: 16px; }
+      .pagination { gap: 4px; }
+      .page-btn { padding: 7px 9px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h2>Board of Intermediate and Secondary Education, Chattogram</h2>
+    <h3>Science Group Ranking</h3>
+  </div>
+
+  <input
+    type="text"
+    id="searchBox"
+    class="search-box"
+    placeholder="রোল, নাম বা প্রতিষ্ঠানের নাম দিয়ে খুঁজুন..."
+    autocomplete="off"
+  >
+
+  <div id="status" class="status">Data loading...</div>
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>RANK</th>
+          <th>ROLL</th>
+          <th>NAME</th>
+          <th>INSTITUTE</th>
+          <th>GPA</th>
+          <th>Total Marks</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <div id="pagination" class="pagination"></div>
+
+  <script>
+    const PAGE_SIZE = 500;
+
+    let allData = [];
+    let filteredData = [];
+    let currentPage = 1;
+
+    const tableBody = document.getElementById('tableBody');
+    const pagination = document.getElementById('pagination');
+    const searchBox = document.getElementById('searchBox');
+    const status = document.getElementById('status');
+
+    // Supports the short field names used by your current data.json.
+    function getValue(student, shortName, fullName = '') {
+      if (student[shortName] !== undefined && student[shortName] !== null) {
+        return String(student[shortName]);
+      }
+      if (fullName && student[fullName] !== undefined && student[fullName] !== null) {
+        return String(student[fullName]);
+      }
+      return '';
+    }
+
+    function calculateTotalMarks(student) {
+      // Sum only numeric subject marks; N/A and other text are ignored.
+      const subjects = student.sb || student['Subject Wise Marks'] || {};
+      let total = 0;
+      for (const mark of Object.values(subjects)) {
+        const value = Number(String(mark).trim());
+        if (Number.isFinite(value)) total += value;
+      }
+      return total;
+    }
+
+    function renderTable() {
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const end = Math.min(start + PAGE_SIZE, filteredData.length);
+      const pageData = filteredData.slice(start, end);
+
+      // Build the whole page once instead of using innerHTML += 500 times.
+      const fragment = document.createDocumentFragment();
+
+      for (const s of pageData) {
+        const row = document.createElement('tr');
+
+        const rankCell = document.createElement('td');
+        rankCell.textContent = getValue(s, 'rk', 'Rank');
+
+        const rollCell = document.createElement('td');
+        rollCell.textContent = getValue(s, 'rl', 'Roll');
+
+        const nameCell = document.createElement('td');
+        const link = document.createElement('a');
+        const roll = getValue(s, 'rl', 'Roll');
+        link.href = 'details.html?roll=' + encodeURIComponent(roll);
+        link.textContent = getValue(s, 'nm', 'Name');
+        nameCell.appendChild(link);
+
+        const instituteCell = document.createElement('td');
+        instituteCell.textContent = getValue(s, 'inst', 'Institute');
+
+        const gpaCell = document.createElement('td');
+        gpaCell.textContent = getValue(s, 'gp', 'GPA');
+
+        const totalCell = document.createElement('td');
+        totalCell.textContent = getValue(s, 'tm', 'Total Marks') || calculateTotalMarks(s);
+
+        row.append(rankCell, rollCell, nameCell, instituteCell, gpaCell, totalCell);
+        fragment.appendChild(row);
+      }
+
+      tableBody.replaceChildren(fragment);
+
+      if (filteredData.length === 0) {
+        status.textContent = 'কোনো matching student পাওয়া যায়নি।';
+      } else {
+        const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+        status.textContent =
+          'মোট ' + filteredData.length.toLocaleString() +
+          ' জন | Page ' + currentPage + ' / ' + totalPages +
+          ' | Showing ' + (start + 1).toLocaleString() +
+          '–' + end.toLocaleString();
+      }
+
+      renderPagination();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderPagination() {
+      pagination.replaceChildren();
+
+      const totalPages = Math.ceil(filteredData.length / PAGE_SIZE);
+      if (totalPages <= 1) return;
+
+      const addButton = (text, page, disabled = false, active = false) => {
+        const btn = document.createElement('button');
+        btn.className = 'page-btn' + (active ? ' active' : '');
+        btn.textContent = text;
+        btn.disabled = disabled;
+        if (!disabled) {
+          btn.addEventListener('click', () => {
+            currentPage = page;
+            renderTable();
+          });
+        }
+        pagination.appendChild(btn);
+      };
+
+      addButton('Previous', currentPage - 1, currentPage === 1);
+
+      // Show a compact set of page numbers.
+      const pages = new Set();
+
+      pages.add(1);
+      pages.add(totalPages);
+      pages.add(currentPage);
+      pages.add(currentPage - 1);
+      pages.add(currentPage + 1);
+      pages.add(currentPage - 2);
+      pages.add(currentPage + 2);
+
+      const sortedPages = [...pages]
+        .filter(p => p >= 1 && p <= totalPages)
+        .sort((a, b) => a - b);
+
+      let previous = 0;
+
+      for (const page of sortedPages) {
+        if (previous && page - previous > 1) {
+          const dots = document.createElement('span');
+          dots.textContent = '...';
+          dots.style.padding = '0 4px';
+          pagination.appendChild(dots);
+        }
+
+        addButton(String(page), page, false, page === currentPage);
+        previous = page;
+      }
+
+      addButton('Next', currentPage + 1, currentPage === totalPages);
+    }
+
+    function performSearch() {
+      const q = searchBox.value.trim().toLowerCase();
+
+      if (!q) {
+        filteredData = allData;
+      } else {
+        filteredData = allData.filter(s => {
+          const name = getValue(s, 'nm', 'Name').toLowerCase();
+          const roll = getValue(s, 'rl', 'Roll').toLowerCase();
+          const institute = getValue(s, 'inst', 'Institute').toLowerCase();
+
+          return name.includes(q) ||
+                 roll.includes(q) ||
+                 institute.includes(q);
+        });
+      }
+
+      currentPage = 1;
+      renderTable();
+    }
+
+    // Small debounce prevents filtering on every single keystroke.
+    let searchTimer;
+    searchBox.addEventListener('input', () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(performSearch, 180);
+    });
+
+    fetch('data.json', { cache: 'default' })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('data.json could not be loaded. HTTP ' + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (!Array.isArray(data)) {
+          throw new Error('data.json must contain an array of students.');
+        }
+
+        allData = data;
+        filteredData = allData;
+
+        status.textContent =
+          'Data loaded: ' + allData.length.toLocaleString() + ' students';
+
+        renderTable();
+      })
+      .catch(error => {
+        console.error(error);
+        status.textContent = '';
+        tableBody.replaceChildren();
+
+        const div = document.createElement('div');
+        div.className = 'error';
+        div.textContent =
+          'Data load করতে সমস্যা হয়েছে: ' + error.message;
+        document.body.appendChild(div);
+      });
+  </script>
+
+</body>
+</html>
