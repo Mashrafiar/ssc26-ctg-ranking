@@ -864,6 +864,16 @@
           <kbd>/</kbd>
           <span>to focus</span>
         </div>
+
+        <div class="entry-guide" role="note" aria-label="How to use this ranking">
+          <div class="entry-guide-title"><span class="entry-guide-check">✓</span> Recheck / Re-scrutiny Updated Result</div>
+          <div class="entry-guide-items">
+            <span><b>Student name</b> → Individual Result</span>
+            <span><b>Institute</b> → School Ranking</span>
+            <span><b>Search / Filter</b> → Find students</span>
+            <span><b>↔ Table</b> → যেকোনো জায়গা ধরে টানুন</span>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -954,7 +964,7 @@
 </div>
 
 <script>
-    const PAGE_SIZE = 500;
+    const PAGE_SIZE = 120;
 
     let allData = [];
     let filteredData = [];
@@ -1643,11 +1653,6 @@ tbody tr:hover td{background:inherit!important}
   if(!oldTools) return;
   const PAGE=120;
   /* Keep the logical dataset intact; only reduce rendered DOM rows. */
-  try{
-    const mainScript=[...document.scripts].find(x=>x.textContent.includes('const PAGE_SIZE = 500'));
-    if(mainScript) mainScript.textContent=mainScript.textContent.replace('const PAGE_SIZE = 500','const PAGE_SIZE = 120');
-  }catch{}
-
   const host=document.createElement('section');
   host.className='mx-filter-studio';
   host.innerHTML=`
@@ -1783,6 +1788,104 @@ tbody tr:hover td{background:inherit!important}
   obs.observe(document.body,{childList:true,subtree:true});
   setTimeout(fill,800);
   const searchSync=document.getElementById('searchBox'); searchSync?.addEventListener('input',()=>setTimeout(()=>{if(typeof allData!=='undefined'&&Array.isArray(allData))run()},420));
+})();
+</script>
+
+
+<style id="ssc26-v1-refinement">
+/* V1 refinement: same structure, calmer premium palette + drag-anywhere table */
+:root{
+  --v1-blue:#2457d6;--v1-indigo:#5b4fd8;--v1-cyan:#2bbbd3;--v1-navy:#071a38;
+}
+body.px-premium .site-header{
+  background:
+    radial-gradient(circle at 82% 16%,rgba(43,187,211,.17),transparent 25%),
+    radial-gradient(circle at 14% 84%,rgba(91,79,216,.16),transparent 29%),
+    linear-gradient(135deg,#06142f 0%,#0a2145 57%,#123b68 100%)!important;
+}
+body.px-premium .site-header::before,body.px-premium .site-header::after{animation:none!important}
+body.px-premium .ranking-shell{box-shadow:0 22px 60px rgba(7,20,46,.12)!important}
+body.px-premium .px-q.active{background:linear-gradient(135deg,var(--v1-blue),var(--v1-indigo))!important}
+body.px-premium #pxApply{background:linear-gradient(135deg,#1f55d5,#6554d9)!important}
+body.px-premium .px-bar i{background:linear-gradient(90deg,var(--v1-blue),var(--v1-cyan))}
+body.px-premium .page-btn.active{background:linear-gradient(135deg,#1f55d5,#4c79e8)!important}
+body.px-premium .student-link:hover{color:var(--v1-blue)!important}
+body.px-premium .institute:hover{color:var(--v1-blue)!important}
+.entry-guide{
+  margin-top:16px;padding:13px 15px;border:1px solid rgba(255,255,255,.13);
+  border-radius:16px;background:rgba(4,14,34,.28);backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);box-shadow:0 10px 28px rgba(0,0,0,.12);
+}
+.entry-guide-title{display:flex;align-items:center;gap:7px;color:#f4fbff;font-size:11px;font-weight:900;letter-spacing:.02em}
+.entry-guide-check{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:rgba(43,187,211,.18);color:#67e4ee;font-size:12px}
+.entry-guide-items{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.entry-guide-items span{padding:6px 9px;border:1px solid rgba(255,255,255,.09);border-radius:999px;background:rgba(255,255,255,.055);color:#c3d0e3;font-size:10px;line-height:1.3}
+.entry-guide-items b{color:#fff;font-weight:800}
+.table-wrap{
+  cursor:grab;touch-action:pan-y;user-select:none;
+  -webkit-user-select:none;
+}
+.table-wrap.dragging{cursor:grabbing}
+.table-wrap.dragging a,.table-wrap.dragging button{pointer-events:none}
+@media(max-width:600px){
+  .entry-guide{margin-top:13px;padding:11px 12px;border-radius:14px}
+  .entry-guide-items{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .entry-guide-items span{border-radius:11px;padding:7px 8px;font-size:9.5px}
+}
+@media(prefers-reduced-motion:reduce){.entry-guide{transition:none!important}}
+</style>
+<script id="ssc26-v1-table-drag">
+(() => {
+  const wrap = document.querySelector('.table-wrap');
+  if (!wrap) return;
+  let downX = 0, downY = 0, startLeft = 0;
+  let dragging = false, horizontal = false, moved = false;
+
+  wrap.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+    if (wrap.scrollWidth <= wrap.clientWidth + 1) return;
+    downX = e.clientX; downY = e.clientY;
+    startLeft = wrap.scrollLeft;
+    dragging = false; horizontal = false; moved = false;
+  }, {passive:true});
+
+  wrap.addEventListener('pointermove', (e) => {
+    if (downX === 0 && downY === 0) return;
+    const dx = e.clientX - downX;
+    const dy = e.clientY - downY;
+    if (!horizontal && !dragging) {
+      if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+      if (Math.abs(dx) <= Math.abs(dy)) {
+        downX = 0; downY = 0;
+        return;
+      }
+      horizontal = true; dragging = true; moved = true;
+      wrap.classList.add('dragging');
+      try { wrap.setPointerCapture(e.pointerId); } catch {}
+    }
+    if (!dragging) return;
+    e.preventDefault();
+    wrap.scrollLeft = startLeft - dx;
+  }, {passive:false});
+
+  const end = (e) => {
+    if (dragging) {
+      try { wrap.releasePointerCapture(e.pointerId); } catch {}
+    }
+    dragging = false; horizontal = false;
+    wrap.classList.remove('dragging');
+    downX = 0; downY = 0;
+  };
+  wrap.addEventListener('pointerup', end, {passive:true});
+  wrap.addEventListener('pointercancel', end, {passive:true});
+  wrap.addEventListener('lostpointercapture', () => {
+    dragging = false; horizontal = false; wrap.classList.remove('dragging');
+  }, {passive:true});
+
+  // Prevent accidental link activation only after a real horizontal drag.
+  wrap.addEventListener('click', (e) => {
+    if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
+  }, true);
 })();
 </script>
 
