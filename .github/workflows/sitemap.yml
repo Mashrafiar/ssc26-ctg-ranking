@@ -1,11 +1,13 @@
 name: Generate Sitemap
 
+# Put this file at:  .github/workflows/sitemap.yml   (replaces the old one)
 on:
   push:
     branches:
       - main
     paths:
-      - 'data.json'
+      - '*.json'
+      - '*.html'
       - '.github/workflows/sitemap.yml'
   workflow_dispatch:
 
@@ -23,55 +25,80 @@ jobs:
       - name: Generate sitemap
         run: |
           python3 - <<'PY'
-          import json
-          import html
+          import datetime, glob, html, json, os
           from pathlib import Path
 
           BASE = "https://mashrafiar.github.io/ssc26-ctg-ranking/"
+          MAX_URLS = 40000   # Google limit is 50,000 URLs per sitemap file
 
-          with open("data.json", "r", encoding="utf-8") as f:
-              data = json.load(f)
-
-          urls = [
-              BASE,
-              BASE + "details.html"
+          # Normal pages (only added when the file exists)
+          PAGES = [
+              "", "ssc.html", "hsc.html",
+              "science.html", "business.html", "humanities.html",
+              "hsc-science.html", "hsc-business.html", "hsc-humanities.html",
           ]
 
-          for student in data:
-              roll = student.get("rl")
-              if roll is not None:
-                  urls.append(
-                      BASE + "details.html?roll=" + str(roll)
-                  )
-
-          # Remove duplicates
-          urls = list(dict.fromkeys(urls))
-
-          sitemap = [
-              '<?xml version="1.0" encoding="UTF-8"?>',
-              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+          # (data file, details page): one URL per student is added for each existing pair
+          DATASETS = [
+              ("data.json",                  "science-details.html"),
+              ("business-data.json",         "business-details.html"),
+              ("humanities-data.json",       "humanities-details.html"),
+              ("hsc26-science-data.json",    "hsc-science-details.html"),
+              ("hsc26-business-data.json",   "hsc-business-details.html"),
+              ("hsc26-humanities-data.json", "hsc-humanities-details.html"),
           ]
 
-          for url in urls:
-              sitemap.append("  <url>")
-              sitemap.append(f"    <loc>{html.escape(url)}</loc>")
-              sitemap.append("  </url>")
+          urls = []
+          for p in PAGES:
+              if p == "" or os.path.exists(p):
+                  urls.append(BASE + p)
 
-          sitemap.append("</urlset>")
+          for data_file, details_page in DATASETS:
+              if not (os.path.exists(data_file) and os.path.exists(details_page)):
+                  continue
+              with open(data_file, "r", encoding="utf-8") as f:
+                  data = json.load(f)
+              count = 0
+              for student in data:
+                  # SSC files use "rl" / "Roll"; HSC files use "Roll No"
+                  roll = student.get("rl") or student.get("Roll") or student.get("Roll No")
+                  if roll is not None and str(roll).strip():
+                      urls.append(BASE + details_page + "?roll=" + str(roll).strip())
+                      count += 1
+              print(f"{data_file}: {count} students")
 
-          Path("sitemap.xml").write_text(
-              "\n".join(sitemap),
-              encoding="utf-8"
-          )
+          urls = list(dict.fromkeys(urls))   # remove duplicates, keep order
 
-          print(f"Generated sitemap with {len(urls)} URLs")
+          # remove old generated files so a smaller dataset never leaves stale entries
+          for old in glob.glob("sitemap*.xml"):
+              os.remove(old)
+
+          today = datetime.date.today().isoformat()
+          chunks = [urls[i:i + MAX_URLS] for i in range(0, len(urls), MAX_URLS)]
+          index = ['<?xml version="1.0" encoding="UTF-8"?>',
+                   '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+
+          for n, chunk in enumerate(chunks, start=1):
+              name = f"sitemap-{n}.xml"
+              lines = ['<?xml version="1.0" encoding="UTF-8"?>',
+                       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+              for u in chunk:
+                  lines.append(f"  <url><loc>{html.escape(u)}</loc></url>")
+              lines.append("</urlset>")
+              Path(name).write_text("\n".join(lines), encoding="utf-8")
+              index.append(f"  <sitemap><loc>{BASE}{name}</loc><lastmod>{today}</lastmod></sitemap>")
+
+          index.append("</sitemapindex>")
+          Path("sitemap.xml").write_text("\n".join(index), encoding="utf-8")
+          print(f"Generated {len(urls)} URLs in {len(chunks)} sitemap file(s)")
+          PY
 
       - name: Commit sitemap
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add sitemap.xml
+          git add -A -- 'sitemap*.xml'
 
           if git diff --cached --quiet; then
             echo "No sitemap changes."
