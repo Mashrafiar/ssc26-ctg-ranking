@@ -1381,7 +1381,7 @@
               <td><span class="school-rank-number">${schoolRank}</span></td>
               <td><span class="school-board-rank">#${escapeHTML(boardRank)}</span></td>
               <td>${escapeHTML(roll)}</td>
-              <td><span class="school-student-name">${escapeHTML(name)}</span></td>
+              <td><span class="school-student-name">${roll!=='—'?`<a class="ui-slink" href="science-details.html?roll=${encodeURIComponent(roll)}">${escapeHTML(name)}</a>`:escapeHTML(name)}</span></td>
               <td>${escapeHTML(gpa)}</td>
               <td><span class="school-marks">${escapeHTML(total)}</span></td>
             </tr>
