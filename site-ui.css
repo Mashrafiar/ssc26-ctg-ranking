@@ -86,3 +86,64 @@ html[data-theme="light"] .sp-live strong{color:#0b1730}
 
 html[data-theme="light"] .sp-brand-name{color:#0b1730}
 html[data-theme="light"] .sp-brand-sub{color:#64748b}
+
+/* ===== light theme: ranking pages (body.px-premium) ===== */
+html[data-theme="light"] body.px-premium{background:radial-gradient(circle at 10% 0%,#22d3ee14,transparent 28%),radial-gradient(circle at 92% 8%,#2563eb12,transparent 30%),#f4f7fb!important;color:#07142e}
+html[data-theme="light"] .px-orbs,html[data-theme="light"] .dx-orb{display:none!important}
+html[data-theme="light"] body.px-premium .stat-card,html[data-theme="light"] body.px-premium .ranking-shell{background:#fff!important;border-color:#e5ebf3!important;box-shadow:0 18px 50px rgba(8,24,55,.09)!important;backdrop-filter:none;-webkit-backdrop-filter:none}
+html[data-theme="light"] body.px-premium .stat-label,html[data-theme="light"] body.px-premium .stat-note,html[data-theme="light"] body.px-premium .status,html[data-theme="light"] body.px-premium .institute{color:#687892!important}
+html[data-theme="light"] body.px-premium .stat-value,html[data-theme="light"] body.px-premium .ranking-title{color:#07142e}
+html[data-theme="light"] body.px-premium .ranking-head{border-color:#e5ebf3!important}
+html[data-theme="light"] body.px-premium th{background:#f8fafd!important;color:#718097!important;border-color:#e5ebf3!important}
+html[data-theme="light"] body.px-premium td{background:#fff!important;color:#0f172a!important;border-color:#edf1f6!important}
+html[data-theme="light"] body.px-premium tbody tr:hover td{background:#f5f9ff!important}
+html[data-theme="light"] body.px-premium .student-link{color:#0b1a33}
+html[data-theme="light"] body.px-premium .student-link:hover{color:#2563eb!important}
+html[data-theme="light"] body.px-premium .gpa{background:#dcfce7;color:#15803d}
+html[data-theme="light"] body.px-premium .pagination{background:#f8fafc!important;border-color:#e5ebf3!important}
+html[data-theme="light"] body.px-premium .page-btn{background:#fff;border-color:#dbe4f0;color:#475569}
+html[data-theme="light"] body.px-premium .page-btn.active{background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;border-color:transparent}
+html[data-theme="light"] body.px-premium .footer{color:#94a3b8}
+html[data-theme="light"] .px-chip{background:#fff;border-color:#dbe4f0;color:#334155;backdrop-filter:none;box-shadow:0 4px 14px rgba(15,23,42,.06)}
+html[data-theme="light"] .px-chip:hover{border-color:#60a5fa;box-shadow:0 8px 22px rgba(37,99,235,.14)}
+html[data-theme="light"] .px-command,html[data-theme="light"] .px-backtop{background:#fff;color:#0f172a;border-color:#dbe4f0;box-shadow:0 10px 28px rgba(15,23,42,.14);backdrop-filter:none}
+html[data-theme="light"] .px-panel{background:#fff;border-color:#e2e8f0;box-shadow:0 18px 50px rgba(8,24,55,.09);backdrop-filter:none}
+html[data-theme="light"] .px-tools-title{color:#0b1a33}
+html[data-theme="light"] .px-tools-sub{color:#64748b}
+html[data-theme="light"] .px-field label{color:#64748b}
+html[data-theme="light"] .px-field select,html[data-theme="light"] .px-field input{background:#fff;border-color:#d5dfec;color:#0f172a}
+html[data-theme="light"] .px-field select option{background:#fff;color:#0f172a}
+html[data-theme="light"] .px-q{background:#fff;border-color:#dbe4f0;color:#475569}
+html[data-theme="light"] .px-q:hover,html[data-theme="light"] .px-q.active{background:linear-gradient(135deg,#246fff,#855cff);color:#fff;border-color:transparent}
+html[data-theme="light"] .px-gpa-card{background:#fff;border-color:#e5ebf3;box-shadow:0 10px 30px rgba(8,24,55,.07)}
+html[data-theme="light"] .px-gpa-top{color:#0b1a33}
+html[data-theme="light"] .px-gpa-pct{color:#059669}
+html[data-theme="light"] .px-gpa-num{color:#07142e}
+html[data-theme="light"] .px-bar{background:#e8eef6}
+html[data-theme="light"] .px-toast{background:#0f172a}
+
+/* ===== light theme: individual result (details) pages ===== */
+html[data-theme="light"] body:before{background:none}
+html[data-theme="light"] .summary-card,html[data-theme="light"] .panel{background:#fff!important;border-color:#dfe7f1!important;box-shadow:0 18px 50px rgba(7,20,46,.08)!important;backdrop-filter:none!important}
+html[data-theme="light"] .summary-card.primary{background:linear-gradient(145deg,#eff6ff,#f5f3ff)!important}
+html[data-theme="light"] .label,html[data-theme="light"] .small,html[data-theme="light"] .info-item label{color:#64748b!important}
+html[data-theme="light"] .panel-title,html[data-theme="light"] .info-item span{color:#0b1730!important}
+html[data-theme="light"] .info-grid{background:#e8eef6!important}
+html[data-theme="light"] .info-item{background:#fff!important}
+html[data-theme="light"] .panel-head{border-color:#e5ebf3!important}
+html[data-theme="light"] .table-wrap th{background:#f4f7fb!important;color:#64748b!important;border-color:#e5ebf3!important}
+html[data-theme="light"] .table-wrap td{background:#fff!important;color:#0f172a!important;border-color:#edf1f6!important}
+html[data-theme="light"] .table-wrap tbody tr:hover td{background:#f5f9ff!important}
+html[data-theme="light"] .mark{background:#dbeafe!important;color:#1d4ed8!important}
+html[data-theme="light"] .na{background:#fee2e2!important;color:#b91c1c!important}
+html[data-theme="light"] .footer{color:#94a3b8!important}
+html[data-theme="light"] .share-btn{background:rgba(255,255,255,.12)}
+
+/* ===== layout fixes ===== */
+/* GPA cards were overlapped by the stat cards (negative margin of .main) */
+body.px-premium .main{margin-top:14px!important}
+/* details page: Code / Grade columns were squeezed into vertical text on phones */
+body:has(#sName) .table-wrap table{table-layout:auto!important}
+body:has(#sName) .table-wrap th:not(:first-child),body:has(#sName) .table-wrap td:not(:first-child){white-space:nowrap!important;overflow-wrap:normal!important;padding-left:10px!important;padding-right:10px!important;text-align:center}
+body:has(#sName) .table-wrap th:first-child{width:100%}
+body:has(#sName) .table-wrap th:last-child,body:has(#sName) .table-wrap td:last-child{text-align:right}
