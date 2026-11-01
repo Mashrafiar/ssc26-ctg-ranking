@@ -43,7 +43,8 @@
         ['ssc', 'SSC 2026 • Science', 'science-details.html'],
         ['ssc', 'SSC 2026 • Business Studies', 'business-details.html'],
         ['ssc', 'SSC 2026 • Humanities', 'humanities-details.html'],
-        ['hsc', 'HSC 2026 • Science', 'hsc-science-details.html']
+        ['hsc', 'HSC 2026 • Science', 'hsc-science-details.html'],
+        ['hsc', 'HSC 2026 • Business Studies', 'hsc-business-details.html']
       ].filter(function (o) { return exam === 'all' || o[0] === exam; });
       var box = document.createElement('div'); box.className = 'lk';
       box.innerHTML = '<div class="lk-t"><b>নিজের Result খুঁজুন</b><span>Roll নম্বর দিয়ে সরাসরি Individual Result খুলুন</span></div>' +

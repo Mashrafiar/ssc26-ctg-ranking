@@ -15,7 +15,7 @@ RAW = ["data.json", "business-data.json", "humanities-data.json", "hsc26-science
        "hsc26-business-data.json", "hsc26-humanities-data.json"]
 SHARDS = 256
 # keys the ranking / college / school pages need (both short-key and raw-key styles)
-KEEP = ["rk", "rl", "nm", "gp", "tm", "inst", "Rank", "Roll", "Roll No", "Name", "GPA", "Total Marks", "Institute"]
+KEEP = ["rk", "rl", "nm", "gp", "tm", "inst", "Rank", "Roll", "Roll No", "Name", "GPA", "Total Marks", "Institute", "Result"]
 SUBJECT_KEYS = ["sb", "Subjects", "Subject Wise Marks"]
 
 def dump(obj, path):

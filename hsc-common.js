@@ -66,7 +66,9 @@
     return title(last || s, 'name');
   }
 
-  function resultLabel(gpa, total, subs) {
+  function resultLabel(gpa, total, subs, res) {
+    if (res === 'Absent' || res === 'Reported') return res;
+    if (res === 'Fail') return 'Failed';
     if (gpa > 0) return 'Passed';
     if (!total) return 'No marks recorded';
     for (var i = 0; i < subs.length; i++) if (subs[i].Grade === 'F') return 'Failed';
@@ -82,19 +84,20 @@
 
     var o = {
       rk: r.Rank,
-      rl: String(r['Roll No']),
+      rl: String(r['Roll No'] != null ? r['Roll No'] : r.Roll),
       nm: title(r.Name, 'name'),
       gp: gpa.toFixed(2),
       tm: total,
-      inst: title(r.Institute, 'inst')
+      inst: title(r.Institute, 'inst'),
+      re: r.Result || ''
     };
     if (!full) return o;
 
     var subs = Array.isArray(r.Subjects) ? r.Subjects : [];
-    o.rs = resultLabel(gpa, total, subs);
+    o.rs = resultLabel(gpa, total, subs, r.Result);
     o.fn = title(r["Father's Name"], 'name');
     o.mn = title(r["Mother's Name"], 'name');
-    o.rg = String(r['Reg. No'] || '');
+    o.rg = String(r['Reg. No'] || r['Reg. NO'] || '');
     o.ss = r.Session || '';
     o.tp = title(r.Type, 'name');
     o.gp_grp = title(r.Group, 'name');
@@ -102,13 +105,15 @@
     o.sb = {};
     o.subjects = subs.map(function (x, i) {
       var name = title(x['Subject Name'], 'subject') || ('Subject ' + (x['Subject Code'] || ''));
-      var marks = Number(x['Obtain Marks']) || 0;
+      var rawM = String(x['Obtain Marks'] == null ? '' : x['Obtain Marks']).trim();
+      var marks = Number(rawM) || 0;
       o.sb[name] = marks;
       return {
         n: name,
         c: String(x['Subject Code'] || ''),
         g: x.Grade || '',
         m: marks,
+        a: (rawM !== '' && !isFinite(Number(rawM))) ? 1 : 0,   // non-numeric (e.g. AAA) = absent in that subject
         // Verified on the data: in every passed record where a grade is F, it is the
         // LAST listed subject only -> the last of 7 subjects is the optional 4th subject.
         fourth: subs.length === 7 && i === 6
