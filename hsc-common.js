@@ -66,8 +66,20 @@
     return title(last || s, 'name');
   }
 
+  // Board writes Result in different cases ("WITHHELD", "Reported" ...) -> one canonical spelling
+  function normRes(v) {
+    var s = String(v == null ? '' : v).trim().toLowerCase();
+    if (!s) return '';
+    if (s.indexOf('absent') > -1) return 'Absent';
+    if (s.indexOf('withheld') > -1 || s.indexOf('withheld') > -1) return 'Withheld';
+    if (s.indexOf('report') > -1) return 'Reported';
+    if (s.indexOf('fail') > -1) return 'Fail';
+    if (s.indexOf('pass') > -1) return 'Pass';
+    return String(v).trim();
+  }
+
   function resultLabel(gpa, total, subs, res) {
-    if (res === 'Absent' || res === 'Reported') return res;
+    if (res === 'Absent' || res === 'Reported' || res === 'Withheld') return res;
     if (res === 'Fail') return 'Failed';
     if (gpa > 0) return 'Passed';
     if (!total) return 'No marks recorded';
@@ -89,12 +101,12 @@
       gp: gpa.toFixed(2),
       tm: total,
       inst: title(r.Institute, 'inst'),
-      re: r.Result || ''
+      re: normRes(r.Result)
     };
     if (!full) return o;
 
     var subs = Array.isArray(r.Subjects) ? r.Subjects : [];
-    o.rs = resultLabel(gpa, total, subs, r.Result);
+    o.rs = resultLabel(gpa, total, subs, normRes(r.Result));
     o.fn = title(r["Father's Name"], 'name');
     o.mn = title(r["Mother's Name"], 'name');
     o.rg = String(r['Reg. No'] || r['Reg. NO'] || '');
