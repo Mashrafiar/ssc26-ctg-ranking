@@ -87,6 +87,13 @@
     return 'Incomplete';
   }
 
+  // Raw subjects may be the long form {"Subject Name","Subject Code","Grade","Obtain Marks"} or the
+  // compact form [name, code, grade, marks] (used to keep the big JSON files under GitHub's 25 MB limit).
+  function subj(x) {
+    if (Array.isArray(x)) return { 'Subject Name': x[0], 'Subject Code': x[1], Grade: x[2], 'Obtain Marks': x[3] };
+    return x || {};
+  }
+
   /** Convert one raw record. full=false keeps only what the ranking list needs. */
   function one(r, full) {
     var gpa = Number(r.GPA);
@@ -105,7 +112,7 @@
     };
     if (!full) return o;
 
-    var subs = Array.isArray(r.Subjects) ? r.Subjects : [];
+    var subs = (Array.isArray(r.Subjects) ? r.Subjects : []).map(subj);
     o.rs = resultLabel(gpa, total, subs, normRes(r.Result));
     o.fn = title(r["Father's Name"], 'name');
     o.mn = title(r["Mother's Name"], 'name');

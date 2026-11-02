@@ -29,7 +29,8 @@ def total_from_subjects(r):
         if isinstance(v, dict):
             vals = v.values()
         elif isinstance(v, list):
-            vals = [x.get("Obtain Marks") for x in v if isinstance(x, dict)]
+            vals = [x.get("Obtain Marks") if isinstance(x, dict) else (x[3] if len(x) > 3 else None)
+                    for x in v if isinstance(x, (dict, list))]      # long form or compact [name, code, grade, marks]
         else:
             continue
         t = 0
